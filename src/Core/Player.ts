@@ -3,10 +3,10 @@ import { randomNumber } from "../helpers/RandomNumber"
 
 class Player {
 
-    inGame: boolean;
     readonly nameFirst: string;
     readonly nameLast: string;
     readonly fielding: {[key: string]: number};
+    private inGame: boolean;
     private ratings: {[key: string]: IBattedResult}[][];
 
     constructor(_nameFirst: string, _nameLast: string, _fielding: {[position: string]: number}, _ratings: {[rollOdds: string]: IBattedResult}[][]) {
@@ -17,8 +17,16 @@ class Player {
         this.inGame = false;
     }
 
-    get fullName() {
+    get fullName(): string {
         return `${this.nameFirst} ${this.nameLast}`;
+    }
+
+    get isInGame(): boolean {
+        return this.inGame
+    }
+
+    putIntoGame() {
+        this.inGame = true;
     }
 
     getPlayResult(colIndex: number, rowIndex: number): IBattedResult {

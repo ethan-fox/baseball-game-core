@@ -7,6 +7,8 @@ import * as _ from "lodash";
 
 export class Game {
 
+    private gameStarted: boolean;
+
     private homeSP: Pitcher;
     private homeLineup: Hitter[];
     private homeRunsByInning: number[];
@@ -27,6 +29,10 @@ export class Game {
     private outs: number;
     private topOfInning: boolean;
 
+    private manOnFirst: Hitter;
+    private manOnSecond: Hitter;
+    private manOnThird: Hitter;
+
     constructor(_homeSP: Pitcher, _homeLineup: Hitter[], _awaySP: Pitcher, _awayLineup: Hitter[]) {
 
         this.homeSP = _homeSP;
@@ -43,13 +49,19 @@ export class Game {
         this.homeRunsByInning = _.range(0, gameConfig.INNINGS, 0);
         this.homeHits = 0;
         this.homeErrors = 0;
+        this.homeLOB = 0;
     
         this.awayRunsByInning = _.range(0, gameConfig.INNINGS, 0);
         this.awayHits = 0;
         this.awayErrors = 0;
+        this.awayLOB = 0;
+
+        this.gameStarted = false;
     }
 
     start() {
+
+        this.initLineups();
 
         let currPitcher: Pitcher;
         let currLineup: Hitter[];
@@ -133,18 +145,32 @@ export class Game {
     }
 
     get homeRuns(): number {
-        return this.homeRunsByInning.reduce((acc, curr) => acc += curr, 0)
+        return this.homeRunsByInning.reduce((acc, curr) => acc += curr, 0);
     }
 
     get awayRuns(): number {
-        return this.awayRunsByInning.reduce((acc, curr) => acc += curr, 0)
+        return this.awayRunsByInning.reduce((acc, curr) => acc += curr, 0);
     }
 
     printScoreBoard(): void {
         logger.debug("\nSCOREBOARD:");
-        logger.debug([..._.range(1, this.currentInning+1), "|", "R", "H", "E"].join(" "))
-        logger.debug([...this.awayRunsByInning, "|", this.awayRuns, this.awayHits, this.awayErrors].join(" "))
-        logger.debug([...this.homeRunsByInning, "|", this.homeRuns, this.homeHits, this.homeErrors].join(" "))
+        logger.debug([..._.range(1, this.currentInning+1), "|", "R", "H", "E"].join(" "));
+        logger.debug([...this.awayRunsByInning, "|", this.awayRuns, this.awayHits, this.awayErrors].join(" "));
+        logger.debug([...this.homeRunsByInning, "|", this.homeRuns, this.homeHits, this.homeErrors].join(" "));
+    }
+
+    private initLineups() {
+
+        if (!this.gameStarted) {
+            this.homeSP.putIntoGame();
+            this.awaySP.putIntoGame();
+
+            this.homeLineup.forEach(player => player.putIntoGame());
+            this.awayLineup.forEach(player => player.putIntoGame());
+
+            logger.info("Play Ball!");
+            this.gameStarted = !this.gameStarted;
+        }
     }
 
     private isGameOver(): boolean {
