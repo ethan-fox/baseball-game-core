@@ -1,4 +1,4 @@
-export interface IResult {
+export interface IBattedResult {
     result: string;
     position?: string;
     chartParam?: string;

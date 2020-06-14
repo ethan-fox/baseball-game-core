@@ -290,7 +290,7 @@ export const pitchers = {
                 "1_17": {
                     result: "2B"
                 },
-                "18-20": {
+                "18_20": {
                     result: "FLY",
                     position: "8",
                     chartParam: "B"
