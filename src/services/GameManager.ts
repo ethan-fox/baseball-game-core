@@ -126,6 +126,7 @@ export class GameManager {
                 this.flipInning()
             }
 
+            this.currBatter = this.homeLineup(this.)
             return true;
         } else {
             return false;
