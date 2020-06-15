@@ -1,7 +1,7 @@
 import { hitters, pitchers } from "./config/constants"
 import { Pitcher, Hitter } from "./core"
+import { GameManager } from "./services";
 import * as _ from 'lodash';
-import { GameManager } from "./core";
 
 function playGame() {
 
