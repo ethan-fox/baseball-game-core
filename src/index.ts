@@ -1,7 +1,7 @@
 import { hitters, pitchers } from "./config/constants"
-import { Pitcher, Hitter } from "./core"
+import { Pitcher, Hitter } from "./temp"
 import * as _ from 'lodash';
-import { Game } from "./core";
+import { GameManager } from "./temp";
 
 function playGame() {
 
@@ -26,7 +26,7 @@ function playGame() {
         sampleBatter.batting
     );
 
-    const openingDay = new Game(pitcher, _.range(9).map(() => batter), pitcher, _.range(9).map(() => batter))
+    const openingDay = new GameManager(pitcher, _.range(9).map(() => batter), pitcher, _.range(9).map(() => batter))
 
     openingDay.start();
 

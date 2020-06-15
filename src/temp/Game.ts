@@ -2,10 +2,10 @@ import { Hitter, Pitcher } from ".";
 import { randomNumber } from "../helpers"
 import { gameConfig } from "../config"
 import { IBattedResult } from "./models/BattedResult";
-import { logger } from "../config"
+import { logger } from "../config";
 import * as _ from "lodash";
 
-export class Game {
+export class GameManager {
 
     private gameStarted: boolean;
 
@@ -59,17 +59,20 @@ export class Game {
         this.gameStarted = false;
     }
 
-    start() {
+    start(): void {
 
         this.initLineups();
+
+        console.log("GAME START")
+    }
+
+    executePlay(): void {
 
         let currPitcher: Pitcher;
         let currLineup: Hitter[];
         let currHomeLineupPos = 0;
         let currAwayLineupPos = 0;
         let currBatter: Hitter;
-
-        console.log("GAME START")
 
         while (!this.isGameOver()) {
 

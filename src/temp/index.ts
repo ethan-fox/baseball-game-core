@@ -1,2 +1,2 @@
 export { Pitcher, Hitter } from "./Player";
-export { Game } from "./Game"
+export { GameManager } from "./Game"
