@@ -1,1 +1,1 @@
-export { GameManager } from "./GameManager"
+export { GameRunner } from "./GameRunner"

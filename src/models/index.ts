@@ -1,0 +1,1 @@
+export { IBattedResult } from "./BattedResult"

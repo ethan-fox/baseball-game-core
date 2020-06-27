@@ -17,7 +17,7 @@ export const hitters = {
                 "1_20": {
                     result: "LINE",
                     position: "4",
-                    affect: "DEATH"
+                    effect: "DEATH"
                 }
             }, {
 
@@ -40,11 +40,11 @@ export const hitters = {
             }, {  // I hope this becomes a spreadsheet soon...
                 "1_12": {
                     result: "2B",
-                    affect: "**"
+                    effect: "**"
                 },
                 "13_20": {
                     result: "1B",
-                    affect: "**"
+                    effect: "**"
                 }
             }, {
 
@@ -63,17 +63,17 @@ export const hitters = {
             }, {
                 "1_20": {
                     result: "1B",
-                    affect: "**"
+                    effect: "**"
                 }
             }, {
                 "1_20": {
                     result: "1B",
-                    affect: "**"
+                    effect: "**"
                 }
             }, {
                 "1_20": {
                     result: "LINE",
-                    affect: "INJ"
+                    effect: "INJ"
                 }
             }],
             [{
@@ -429,4 +429,9 @@ export const enum CHART_PARAMS {
     B = "B",
     C = "C",
     X = "X"
+}
+
+export const enum BASE {
+    MAN_ON = '\u25C8',
+    EMPTY = '\u25C7'
 }

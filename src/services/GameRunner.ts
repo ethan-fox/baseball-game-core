@@ -1,11 +1,11 @@
 import { Hitter, Pitcher, BasePath } from "../core";
 import { randomNumber } from "../helpers"
 import { gameConfig, CHART_PARAMS, PLAY_RESULTS, POSITIONS } from "../config"
-import { IBattedResult } from "../core/models/BattedResult";
+import { IBattedResult } from "../models";
 import { logger } from "../config";
 import * as _ from "lodash";
 
-export class GameManager {
+export class GameRunner {
 
     private gameStarted: boolean;
 
@@ -23,7 +23,7 @@ export class GameManager {
     private awayErrors: number;
     private awayLOB: number;
 
-    private currentInning: number;
+    private currInning: number;
     private finalRegulationInning: number;
     
     private outs: number;
@@ -31,11 +31,21 @@ export class GameManager {
 
     private basePath: BasePath;
 
-    private currPitcher: Pitcher;
-    private currLineup: Hitter[];
-    private currBatter: Hitter;
+    // private currPitcher: Pitcher;
+    // private currLineup: Hitter[];
+    // private currBatter: Hitter;
     private currHomeLineupPos = 0;
     private currAwayLineupPos = 0;
+
+    get currPitcher(): Pitcher {
+        return this.topOfInning ? this.homeSP : this.awaySP;
+    }
+
+    get currBatter(): Hitter {
+        return this.topOfInning
+            ? this.awayLineup[this.currAwayLineupPos]
+            : this.homeLineup[this.currHomeLineupPos];
+    }
 
     constructor(_homeSP: Pitcher, _homeLineup: Hitter[], _awaySP: Pitcher, _awayLineup: Hitter[]) {
 
@@ -47,7 +57,7 @@ export class GameManager {
         this.awayLineup = _awayLineup;
         
         // Length of game
-        this.currentInning = 1;
+        this.currInning = 1;
         this.finalRegulationInning = gameConfig.INNINGS;
         this.outs = 0;
         this.topOfInning = true;
@@ -75,10 +85,6 @@ export class GameManager {
 
         this.basePath = new BasePath();
 
-        this.currPitcher = this.homeSP;
-
-        this.currBatter = this.awayLineup[this.currAwayLineupPos];
-
         console.log("GAME START");
     }
 
@@ -88,10 +94,13 @@ export class GameManager {
 
             // logger.debug("CURRENT AT-BAT")
             logger.info("--------------------------------");
-            logger.info(`${(this.topOfInning)?"TOP":"BOTTOM"} INNING ${this.currentInning}`); // FUN WITH TERNARIES!!
+            logger.info(`${(this.topOfInning)?"TOP":"BOTTOM"} INNING ${this.currInning}`); // FUN WITH TERNARIES!!
             logger.debug(`${this.outs} OUT${(this.outs != 1)?"S":""}`);
             // logger.debug(`HOME TEAM: ${this.homeRuns} AWAY TEAM: ${this.awayRuns}`);
 
+            // this.currPitcher = this.homeSP;
+
+            // this.currBatter = this.awayLineup[this.currAwayLineupPos];
 
             logger.debug(`PITCHER: ${this.currPitcher.fullName}`);
             logger.debug(`HITTER: ${this.currBatter.fullName}`);
@@ -100,42 +109,33 @@ export class GameManager {
             const x = randomNumber(0, 2);
             const y = randomNumber(0, 10);
     
-            let result: IBattedResult; // Determine player advantage
-            if (advantage == 0) { // Batter
-                result = this.currBatter.getPlayResult(x, y);
-            } else { // Pitcher
-                result = this.currPitcher.getPlayResult(x, y);
-            }
+            const result = (advantage == 0) // Determine player advantage
+                            ? this.currBatter.getPlayResult(x, y) // Batter
+                            : this.currPitcher.getPlayResult(x, y); // Pitcher
 
-            logger.info(`RESULT: ${result.result}`);
-
-            try { // TODO: Determine outcome from result FIXME: Always force out for now
-                this.incrementOuts();
+            try { // TODO: Determine outcome from result
                 this.incrementLineupIndex();
 
-                switch (result.result) {
-                    case PLAY_RESULTS.SINGLE:
-                        this.basePath.advanceAllRunners(this.currBatter)
+                logger.info(`RESULT: ${result.result}`);
 
-                        break;
-                }
+                const runsScored = this.processResult(result);
 
-                
+                this.addRunsForHalfInning(runsScored);
+
+                this.basePath.printBases();
+
             } catch { // If half-inning is over
                 logger.info("HALF-INNING OVER")
-                this.flipInning()
+                this.flipInning();
+                this.printScoreBoard();
             }
 
-            this.currBatter = this.homeLineup(this.)
+
+            // this.currBatter = this.homeLineup(this.)
             return true;
         } else {
             return false;
         }
-
-        logger.info("GAME OVER!");
-        logger.info(`AWAY TEAM: ${this.awayRuns} HOME TEAM: ${this.homeRuns}`);
-
-        this.printScoreBoard();
     }
 
     get homeRuns(): number {
@@ -148,7 +148,7 @@ export class GameManager {
 
     printScoreBoard(): void {
         logger.debug("\nSCOREBOARD:");
-        logger.debug([..._.range(1, this.currentInning+1), "|", "R", "H", "E"].join(" "));
+        logger.debug([..._.range(1, this.currInning+1), "|", "R", "H", "E"].join(" "));
         logger.debug([...this.awayRunsByInning, "|", this.awayRuns, this.awayHits, this.awayErrors].join(" "));
         logger.debug([...this.homeRunsByInning, "|", this.homeRuns, this.homeHits, this.homeErrors].join(" "));
     }
@@ -168,12 +168,16 @@ export class GameManager {
     }
 
     private flipInning() {
+        const numLOB = this.basePath.clearBases();
         if (!this.topOfInning) { // If bottom of inning
-            this.currentInning++; // Increment the inning
-            if (this.currentInning >= this.finalRegulationInning) { // If we're in extras need to bump the scoreboard/array
+            this.homeLOB += numLOB;
+            this.currInning++; // Increment the inning
+            if (this.currInning >= this.finalRegulationInning) { // If we're in extras need to bump the scoreboard/array
                 this.homeRunsByInning.push()
                 this.awayRunsByInning.push()
             }
+        } else {
+            this.awayLOB += numLOB;
         }
         this.topOfInning = !this.topOfInning; // Flip to other half
         this.outs = 0; // Reset outs
@@ -183,13 +187,13 @@ export class GameManager {
 
         return (this.homeRuns > this.awayRuns) // If the home team is winning ...
             ? (!this.topOfInning) // ... in the bottom of ...
-                ? (this.currentInning >= this.finalRegulationInning) // ... the last inning or later ...
+                ? (this.currInning >= this.finalRegulationInning) // ... the last inning or later ...
                     ? true // ... the game is over.
                     : false
                 : false
             : (this.awayRuns > this.homeRuns) // If the away team is winning ...
                 ? (this.topOfInning) // ... in the top of ...
-                    ? (this.currentInning > this.finalRegulationInning) // ... the first extra inning or later ...
+                    ? (this.currInning > this.finalRegulationInning) // ... the first extra inning or later ...
                         ? true // ... the game is over.
                         : false
                     : false
@@ -213,6 +217,60 @@ export class GameManager {
         }
     }
 
+    private addRunsForHalfInning(runs: number) {
+        this.topOfInning
+            ? this.awayRunsByInning[this.currInning] += runs
+            : this.homeRunsByInning[this.currInning] += runs
+    }
+
+    private processResult(result: IBattedResult): number {
+        let runsScoredOnPlay = 0;
+
+        // TODO: Additional effects (*, **, +, etc...)
+
+        switch (result.result) {
+            // Reach base safely
+            case PLAY_RESULTS.SINGLE:
+                runsScoredOnPlay += this.basePath.advanceAllRunners(this.currBatter);
+                break;
+            case PLAY_RESULTS.DOUBLE:
+                runsScoredOnPlay += this.basePath.advanceAllRunners(this.currBatter);
+                runsScoredOnPlay += this.basePath.advanceAllRunners();
+                break;
+            case PLAY_RESULTS.TRIPLE:
+                runsScoredOnPlay += this.basePath.advanceAllRunners(this.currBatter);
+                runsScoredOnPlay += this.basePath.advanceAllRunners();
+                runsScoredOnPlay += this.basePath.advanceAllRunners();
+                break;
+            case PLAY_RESULTS.HOMERUN:
+                runsScoredOnPlay += this.basePath.advanceAllRunners(this.currBatter);
+                runsScoredOnPlay += this.basePath.advanceAllRunners();
+                runsScoredOnPlay += this.basePath.advanceAllRunners();
+                runsScoredOnPlay += this.basePath.advanceAllRunners();
+                break;
+            case PLAY_RESULTS.WALK:
+                runsScoredOnPlay += this.basePath.advanceAllRunners(this.currBatter);
+                break;
+            // Outs
+            case PLAY_RESULTS.GROUNDBALL:
+                this.incrementOuts();
+                runsScoredOnPlay += this.basePath.advanceAllRunners();
+                // TODO: Chartparams
+                break;
+            case PLAY_RESULTS.FLYBALL:
+                this.incrementOuts();
+                // TODO: Chartparams
+                break;
+            case PLAY_RESULTS.LINEOUT:
+                this.incrementOuts();
+                break;
+            case PLAY_RESULTS.STRIKEOUT:
+                this.incrementOuts();
+                break;
+        }
+
+        return runsScoredOnPlay;
+    }
 
 }
 

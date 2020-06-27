@@ -1,4 +1,4 @@
-import { IBattedResult } from "./models/BattedResult"
+import { IBattedResult } from "../models/BattedResult"
 import { randomNumber } from "../helpers/RandomNumber"
 
 class Player {
