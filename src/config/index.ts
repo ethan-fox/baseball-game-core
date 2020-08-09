@@ -1,4 +1,4 @@
-export { CHART_PARAMS, PLAY_RESULTS, POSITIONS } from './constants';
+export { CHART_PARAMS, HIT_TYPES, PLAY_RESULTS, POSITIONS } from './constants';
 
 export { logger } from './logger';
 

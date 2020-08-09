@@ -3,7 +3,7 @@ import { logger } from './config'
 import { Pitcher, Game, Hitter } from './core'
 import * as _ from 'lodash';
 
-function playGame() {
+export function sampleGameSetup() : Game {
 
     const samplePitcher = pitchers.NYY_P_001;
     const sampleBatter = hitters.NYY_H_001;
@@ -26,23 +26,16 @@ function playGame() {
         sampleBatter.batting
     );
 
-    const openingDay = new Game(pitcher, _.range(9).map(() => batter), pitcher, _.range(9).map(() => batter))
+    return new Game(pitcher, _.range(9).map(() => batter), pitcher, _.range(9).map(() => batter))
 
-    openingDay.start();
+    // openingDay.start();
     
-    while (!openingDay.isGameOver) {
-        openingDay.executePlay();
-    }
+    // while (!openingDay.isGameOver) {
+    //     openingDay.executePlay();
+    // }
 
-    logger.info('GAME OVER!');
-    // logger.info(`AWAY TEAM: ${openingDay.awayRuns} HOME TEAM: ${openingDay.homeRuns}`);
+    // logger.info('GAME OVER!');
+    // // logger.info(`AWAY TEAM: ${openingDay.awayRuns} HOME TEAM: ${openingDay.homeRuns}`);
 
-    openingDay.printScoreBoard();
-    return false;
-
-
-
-    return
+    // openingDay.printScoreBoard();
 }
-
-playGame()

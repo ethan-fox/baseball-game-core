@@ -1,8 +1,7 @@
 import { Hitter, Pitcher, BasePath } from '../core';
 import { randomNumber } from '../helpers'
-import { gameConfig, CHART_PARAMS, PLAY_RESULTS, POSITIONS } from '../config'
+import { gameConfig, CHART_PARAMS, HIT_TYPES, PLAY_RESULTS, POSITIONS, logger } from '../config'
 import { IBattedResult, IPlayResult } from '../models';
-import { logger } from '../config';
 import * as _ from 'lodash';
 
 export class Game {
@@ -110,7 +109,7 @@ export class Game {
         console.log('GAME START');
     }
 
-    executePlay(): boolean {
+    executePlay(): IPlayResult {
 
         if (!this.isGameOver) {
 
@@ -133,31 +132,31 @@ export class Game {
             const result = (advantage == 0) // Determine player advantage
                             ? this.currBatter.getPlayResult(x, y) // Batter
                             : this.currPitcher.getPlayResult(x, y); // Pitcher
+            
+            let playData: IPlayResult;
 
-            try { // Determine outcome from result
-                this.incrementLineupIndex();
+            // Determine outcome from result
+            this.incrementLineupIndex();
 
-                logger.info(`RESULT: ${result.result}`);
+            logger.info(`RESULT: ${result.playResult}`);
 
-                const playResult = this.processResult(result);
+            playData = this.processResult(result);
 
-                this.addRunsForHalfInning(playResult.runsScored);
-                if (playResult.hit) this.addHitForHalfInning()
-
-                this.basePath.printBases();
-
-            } catch { // If half-inning is over
+            if (this.outs == 3) {
                 logger.info('HALF-INNING OVER')
                 this.flipInning();
                 const away = this.awayRuns
                 const home = this.homeRuns
                 logger.debug(`HOME TEAM: ${home} AWAY TEAM: ${away}`);
 
+            } else { // If half-inning is over
+                this.addRunsForHalfInning(playData.runsScored);
+                if (HIT_TYPES.includes(playData.result)) this.addHitForHalfInning();
+
+                this.basePath.printBases();
             }
 
-            return true;
-        } else {
-            return false;
+            return playData;
         }
     }
 
@@ -198,11 +197,6 @@ export class Game {
         this.outs = 0; // Reset outs
     }
 
-    private incrementOuts() {
-        this.outs++;
-        if (this.outs == 3) throw Error();
-    }
-
     private incrementLineupIndex() {
         if (this.topOfInning) {
             this.currAwayLineupPos++;
@@ -236,59 +230,57 @@ export class Game {
 
     private processResult(result: IBattedResult): IPlayResult {
         let runsScored = 0;
-        let hit = false;
 
         // TODO: Additional effects (*, **, +, etc...)
 
-        switch (result.result) {
+        switch (result.playResult) {
             // Reach base safely
             case PLAY_RESULTS.SINGLE:
                 runsScored += this.basePath.advanceAllRunners(this.currBatter);
-                hit = true;
                 break;
             case PLAY_RESULTS.DOUBLE:
                 runsScored += this.basePath.advanceAllRunners(this.currBatter);
                 runsScored += this.basePath.advanceAllRunners();
-                hit = true;
                 break;
             case PLAY_RESULTS.TRIPLE:
                 runsScored += this.basePath.advanceAllRunners(this.currBatter);
                 runsScored += this.basePath.advanceAllRunners();
                 runsScored += this.basePath.advanceAllRunners();
-                hit = true;
                 break;
             case PLAY_RESULTS.HOMERUN:
                 runsScored += this.basePath.advanceAllRunners(this.currBatter);
                 runsScored += this.basePath.advanceAllRunners();
                 runsScored += this.basePath.advanceAllRunners();
                 runsScored += this.basePath.advanceAllRunners();
-                hit = true;
                 break;
             case PLAY_RESULTS.WALK:
                 runsScored += this.basePath.walkBatter(this.currBatter);
                 break;
             // Outs
             case PLAY_RESULTS.GROUNDBALL:
-                this.incrementOuts();
+                this.outs++;
                 runsScored += this.basePath.advanceAllRunners();
                 // TODO: Chartparams
                 break;
             case PLAY_RESULTS.FLYBALL:
-                this.incrementOuts();
+                this.outs++;
                 // TODO: Chartparams
                 break;
             case PLAY_RESULTS.LINEOUT:
-                this.incrementOuts();
+                this.outs++;
                 break;
             case PLAY_RESULTS.STRIKEOUT:
-                this.incrementOuts();
+                this.outs++;
                 break;
             case PLAY_RESULTS.CATCHERS:
-                this.incrementOuts();
+                this.outs++;
                 break;
         }
 
-        return { runsScored, hit };
+        return {
+            runsScored,
+            result: result.playResult
+        };
     }
 
 }

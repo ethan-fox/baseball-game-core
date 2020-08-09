@@ -1,5 +1,5 @@
 import { Hitter } from './Player';
-import { BASE } from '../config/constants';
+import { BASE_ASCII } from '../config/constants';
 
 export class BasePath {
 
@@ -102,9 +102,9 @@ export class BasePath {
 
     // Tiny basepath visualizer TODO: More animation .. literally lowest priority
     printBases(): void {
-        const fB = (this.firstBase)? BASE.MAN_ON : BASE.EMPTY;
-        const sB = (this.secondBase)? BASE.MAN_ON : BASE.EMPTY;
-        const tB = (this.thirdBase)? BASE.MAN_ON : BASE.EMPTY;
+        const fB = (this.firstBase)? BASE_ASCII.MAN_ON : BASE_ASCII.EMPTY;
+        const sB = (this.secondBase)? BASE_ASCII.MAN_ON : BASE_ASCII.EMPTY;
+        const tB = (this.thirdBase)? BASE_ASCII.MAN_ON : BASE_ASCII.EMPTY;
 
         console.log(`  ${sB}  `);
         console.log(`${tB}   ${fB}`);

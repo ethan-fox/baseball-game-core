@@ -1,11 +1,11 @@
 export interface IBattedResult {
-    result: string;
+    playResult: string;
     position?: string;
     chartParam?: string;
     effect?: string;
 }
 
 export interface IPlayResult {
+    result: string;
     runsScored: number;
-    hit: boolean;
 }

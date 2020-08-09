@@ -15,191 +15,191 @@ export const hitters = {
         batting: [
             [{
                 '1_20': {
-                    result: 'LINE',
+                    playResult: 'LINE',
                     position: '4',
                     effect: 'DEATH'
                 }
             }, {
 
                 '1_20': {
-                    result: 'BB'
+                    playResult: 'BB'
                 }
             }, {
 
                 '1_20': {
-                    result: 'HR'
+                    playResult: 'HR'
                 }
             }, {
 
                 '1_8': {
-                    result: 'HR'
+                    playResult: 'HR'
                 },
                 '9_20': {
-                    result: '2B'
+                    playResult: '2B'
                 }
             }, {  // I hope this becomes a spreadsheet soon...
                 '1_12': {
-                    result: '2B',
+                    playResult: '2B',
                     effect: '**'
                 },
                 '13_20': {
-                    result: '1B',
+                    playResult: '1B',
                     effect: '**'
                 }
             }, {
 
                 '1_20': {
-                    result: '1B'
+                    playResult: '1B'
                 }
             }, {
                 '1_20': {
-                    result: '1B'
+                    playResult: '1B'
                 }
             }, {
                 '1_20': {
-                    result: 'FLY',
+                    playResult: 'FLY',
                     position: '6'
                 }
             }, {
                 '1_20': {
-                    result: '1B',
+                    playResult: '1B',
                     effect: '**'
                 }
             }, {
                 '1_20': {
-                    result: '1B',
+                    playResult: '1B',
                     effect: '**'
                 }
             }, {
                 '1_20': {
-                    result: 'LINE',
+                    playResult: 'LINE',
                     effect: 'INJ'
                 }
             }],
             [{
                 '1_20': {
-                    result: 'FLY',
+                    playResult: 'FLY',
                     position: '6'
                 }
             }, {
                 '1_20': {
-                    result: 'LINE',
+                    playResult: 'LINE',
                     position: '5'
                 }
             }, {
                 '1_20': {
-                    result: 'LINE',
+                    playResult: 'LINE',
                     position: '5'
                 }
             }, {
                 '1_20': {
-                    result: 'GROUND',
+                    playResult: 'GROUND',
                     position: '6',
                     chartParam: 'A',
                     effect: '++'
                 }
             }, {
                 '1_20': {
-                    result: 'GROUND',
+                    playResult: 'GROUND',
                     position: '5',
                     chartParam: 'A'
                 }
             }, {
                 '1_20': {
-                    result: 'GROUND',
+                    playResult: 'GROUND',
                     position: '5',
                     chartParam: 'A'
                 }
             }, {
                 '1_20': {
-                    result: 'GROUND',
+                    playResult: 'GROUND',
                     position: '6',
                     chartParam: 'A'
                 }
             }, {
                 '1_20': {
-                    result: 'FLY',
+                    playResult: 'FLY',
                     position: '8',
                     chartParam: 'B'
                 }
             }, {
                 '1_20': {
-                    result: 'GROUND',
+                    playResult: 'GROUND',
                     position: '1',
                     chartParam: 'B'
                 }
             }, {
                 '1_20': {
-                    result: 'FLY',
+                    playResult: 'FLY',
                     position: '4'
                 }
             }, {
                 '1_20': {
-                    result: 'FOULTIP',
+                    playResult: 'FOULTIP',
                     position: '2'
                 }
             }],
             [{
                 '1_20': {
-                    result: 'GROUND',
+                    playResult: 'GROUND',
                     position: '5',
                     chartParam: 'B'
                 }
             }, {
                 '1_20': {
-                    result: 'GROUND',
+                    playResult: 'GROUND',
                     position: '4',
                     chartParam: 'B'
                 }
             }, {
                 '1_20': {
-                    result: 'GROUND',
+                    playResult: 'GROUND',
                     position: '6',
                     chartParam: 'A'
                 }
             }, {
                 '1_20': {
-                    result: '1B',
+                    playResult: '1B',
                     effect: '*'
                 }
             }, {
                 '1_20': {
-                    result: '1B',
+                    playResult: '1B',
                     effect: '**'
                 }
             }, {
                 '1_20': {
-                    result: 'FLY',
+                    playResult: 'FLY',
                     position: '7',
                     chartParam: 'B'
                 }
             }, {
                 '1_20': {
-                    result: 'K'
+                    playResult: 'K'
                 }
             }, {
                 '1_20': {
-                    result: 'BB'
+                    playResult: 'BB'
                 }
             }, {
                 '1_16': {
-                    result: '1B',
+                    playResult: '1B',
                     effect: '*'
                 },
                 '17_20': {
-                    result: 'LINE',
+                    playResult: 'LINE',
                     position: '5'
                 }
             }, {
                 '1_20': {
-                    result: 'GROUND',
+                    playResult: 'GROUND',
                     position: '6',
                     chartParam: 'A',
                     effect: '++'
                 }
             }, {
                 '1_20': {
-                    result: 'FLY',
+                    playResult: 'FLY',
                     position: '8',
                     chartParam: 'B'
                 }
@@ -220,177 +220,177 @@ export const pitchers = {
         pitching: [
             [{
                 '1_20': {
-                    result: 'FLY',
+                    playResult: 'FLY',
                     position: '8',
                     chartParam: 'X'
                 }
             }, {
                 '1_20': {
-                    result: 'FLY',
+                    playResult: 'FLY',
                     position: '9',
                     chartParam: 'X'
                 }
             }, {
                 '1_20': {
-                    result: 'GROUND',
+                    playResult: 'GROUND',
                     position: '6',
                     chartParam: 'X'
                 }
             }, {
                 '1_20': {
-                    result: 'K'
+                    playResult: 'K'
                 }
             }, {
                 '1_20': {
-                    result: 'K'
+                    playResult: 'K'
                 }
             }, {
                 '1_20': {
-                    result: 'K'
+                    playResult: 'K'
                 }
             }, {
                 '1_20': {
-                    result: 'K'
+                    playResult: 'K'
                 }
             }, {
                 '1_18': {
-                    result: 'HR'
+                    playResult: 'HR'
                 },
                 '19_20': {
-                    result: '2B'
+                    playResult: '2B'
                 }
             }, {
                 '1_20': {
-                    result: 'GROUND',
+                    playResult: 'GROUND',
                     position: '5',
                     chartParam: 'X'
                 }
             }, {
                 '1_20': {
-                    result: 'GROUND',
+                    playResult: 'GROUND',
                     position: '3',
                     chartParam: 'C'
                 }
             }, {
                 '1_20': {
-                    result: 'K'
+                    playResult: 'K'
                 }
             }],
             [{
                 '1_20': {
-                    result: 'BB'
+                    playResult: 'BB'
                 }
             }, {
                 '1_20': {
-                    result: 'GROUND',
+                    playResult: 'GROUND',
                     position: '1',
                     chartParam: 'X'
                 }
             }, {
                 '1_17': {
-                    result: '2B'
+                    playResult: '2B'
                 },
                 '18_20': {
-                    result: 'FLY',
+                    playResult: 'FLY',
                     position: '8',
                     chartParam: 'B'
                 }
             }, {
                 '1_20': {
-                    result: 'K'
+                    playResult: 'K'
                 }
             }, {
                 '1_20': {
-                    result: 'K'
+                    playResult: 'K'
                 }
             }, {
                 '1_20': {
-                    result: 'K'
+                    playResult: 'K'
                 }
             }, {
                 '1_20': {
-                    result: 'GROUND',
+                    playResult: 'GROUND',
                     position: '4',
                     chartParam: 'X'
                 }
             }, {
                 '1_20': {
-                    result: 'K'
+                    playResult: 'K'
                 }
             }, {
                 '1_20': {
-                    result: 'BB'
+                    playResult: 'BB'
                 }
             }, {
                 '1_20': {
-                    result: 'GROUND',
+                    playResult: 'GROUND',
                     position: '3',
                     chartParam: 'X'
                 }
             }, {
                 '1_20': {
-                    result: 'K'
+                    playResult: 'K'
                 }
             }],
             [{
                 '1_20': {
-                    result: 'GROUND',
+                    playResult: 'GROUND',
                     position: '4',
                     chartParam: 'X'
                 } 
             }, {
                 '1_20': {
-                    result: 'FLY',
+                    playResult: 'FLY',
                     position: '7',
                     chartParam: 'X'
                 }
             }, {
                 '1_20': {
-                    result: 'CATCHER\'S CARD',
+                    playResult: 'CATCHER\'S CARD',
                     position: '2',
                     chartParam: 'X'
                 }
             }, {
                 '1_20': {
-                    result: 'K'
+                    playResult: 'K'
                 }
             }, {
                 '1_20': {
-                    result: 'K'
+                    playResult: 'K'
                 }
             }, {
                 '1_20': {
-                    result: 'K'
+                    playResult: 'K'
                 }
             }, {
                 '1_20': {
-                    result: 'K'
+                    playResult: 'K'
                 }
             }, {
                 '1_11': {
-                    result: '1B',
+                    playResult: '1B',
                     effect: '*'
                 },
                 '12_20': {
-                    result: 'GROUND',
+                    playResult: 'GROUND',
                     position: '4',
                     chartParam: 'C'
                 }
             }, {
                 '1_20': {
-                    result: 'GROUND',
+                    playResult: 'GROUND',
                     position: '6',
                     chartParam: 'X'
                 }
             }, {
                 '1_20': {
-                    result: 'FLY',
+                    playResult: 'FLY',
                     position: '8',
                     chartParam: 'X'
                 }
             }, {
                 '1_20': {
-                    result: 'GROUND',
+                    playResult: 'GROUND',
                     position: '6',
                     chartParam: 'X'
                 }
@@ -424,6 +424,13 @@ export const enum PLAY_RESULTS {
     HOMERUN = 'HR'
 }
 
+export const HIT_TYPES : string[] = [
+    PLAY_RESULTS.SINGLE,
+    PLAY_RESULTS.DOUBLE,
+    PLAY_RESULTS.TRIPLE,
+    PLAY_RESULTS.HOMERUN
+]
+
 export const enum CHART_PARAMS {
     A = 'A',
     B = 'B',
@@ -431,7 +438,7 @@ export const enum CHART_PARAMS {
     X = 'X'
 }
 
-export const enum BASE {
+export const enum BASE_ASCII {
     MAN_ON = '\u25C8',
     EMPTY = '\u25C7'
 }
