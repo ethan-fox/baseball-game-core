@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "ts-node src/app.ts --esModuleInterop true"
+    "dev": "ts-node src/app.ts"
   },
   "repository": {
     "type": "git",
