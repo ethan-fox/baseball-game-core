@@ -1,5 +1,5 @@
-import { IBattedResult } from "../models/BattedResult"
-import { randomNumber } from "../helpers/RandomNumber"
+import { IBattedResult } from '../models/BattedResult'
+import { randomNumber } from '../helpers/NumberHelper'
 
 class Player {
 
@@ -38,7 +38,7 @@ class Player {
         const odds = Object.keys(resultOdds)
         
         for (let i = 0; i < odds.length; ++i) {
-            const parsedOdds = odds[i].split("_").map(limit => Number(limit));
+            const parsedOdds = odds[i].split('_').map(limit => Number(limit));
 
             if (playResult >= parsedOdds[0] &&
                 playResult <= parsedOdds[1]) {
@@ -46,7 +46,7 @@ class Player {
                 }
         }
 
-        throw Error("Dice roll could not be determined.");
+        throw Error('Dice roll could not be determined.');
     }
 }
 

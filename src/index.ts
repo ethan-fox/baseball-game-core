@@ -1,7 +1,6 @@
-import { hitters, pitchers } from "./config/constants"
-import { logger } from "./config"
-import { Pitcher, Hitter } from "./core"
-import { GameRunner } from "./services";
+import { hitters, pitchers } from './config/constants'
+import { logger } from './config'
+import { Pitcher, Game, Hitter } from './core'
 import * as _ from 'lodash';
 
 function playGame() {
@@ -27,19 +26,18 @@ function playGame() {
         sampleBatter.batting
     );
 
-    const openingDay = new GameRunner(pitcher, _.range(9).map(() => batter), pitcher, _.range(9).map(() => batter))
+    const openingDay = new Game(pitcher, _.range(9).map(() => batter), pitcher, _.range(9).map(() => batter))
 
     openingDay.start();
     
-    while (true) {
-        const flag = openingDay.executePlay();
-        if (!flag) break;
+    while (!openingDay.isGameOver) {
+        openingDay.executePlay();
     }
 
-    logger.info("GAME OVER!");
-    logger.info(`AWAY TEAM: ${this.awayRuns} HOME TEAM: ${this.homeRuns}`);
+    logger.info('GAME OVER!');
+    // logger.info(`AWAY TEAM: ${openingDay.awayRuns} HOME TEAM: ${openingDay.homeRuns}`);
 
-    this.printScoreBoard();
+    openingDay.printScoreBoard();
     return false;
 
 

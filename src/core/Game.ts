@@ -1,11 +1,11 @@
-import { Hitter, Pitcher, BasePath } from "../core";
-import { randomNumber } from "../helpers"
-import { gameConfig, CHART_PARAMS, PLAY_RESULTS, POSITIONS } from "../config"
-import { IBattedResult } from "../models";
-import { logger } from "../config";
-import * as _ from "lodash";
+import { Hitter, Pitcher, BasePath } from '../core';
+import { randomNumber } from '../helpers'
+import { gameConfig, CHART_PARAMS, PLAY_RESULTS, POSITIONS } from '../config'
+import { IBattedResult } from '../models';
+import { logger } from '../config';
+import * as _ from 'lodash';
 
-export class GameRunner {
+export class Game {
 
     private gameStarted: boolean;
 
@@ -24,7 +24,6 @@ export class GameRunner {
     private awayLOB: number;
 
     private currInning: number;
-    private finalRegulationInning: number;
     
     private outs: number;
     private topOfInning: boolean;
@@ -47,6 +46,33 @@ export class GameRunner {
             : this.homeLineup[this.currHomeLineupPos];
     }
 
+    get isGameOver(): boolean {
+
+        return (this.currInning+1 > gameConfig.INNINGS)
+
+        // return (this.homeRuns > this.awayRuns) // If the home team is winning ...
+        //     ? (!this.topOfInning) // ... in the bottom of ...
+        //         ? (this.currInning >= this.finalRegulationInning) // ... the last inning or later ...
+        //             ? true // ... the game is over.
+        //             : false
+        //         : false
+        //     : (this.awayRuns > this.homeRuns) // If the away team is winning ...
+        //         ? (this.topOfInning) // ... in the top of ...
+        //             ? (this.currInning > this.finalRegulationInning) // ... the first extra inning or later ...
+        //                 ? true // ... the game is over.
+        //                 : false
+        //             : false
+        //         : false;
+    }
+
+    get homeRuns(): number {
+        return this.homeRunsByInning.reduce((a, c) => a+=c, 0);
+    }
+
+    get awayRuns(): number {
+        return this.awayRunsByInning.reduce((a, c) => a+=c, 0);
+    }
+
     constructor(_homeSP: Pitcher, _homeLineup: Hitter[], _awaySP: Pitcher, _awayLineup: Hitter[]) {
 
         // Starting lineups
@@ -57,18 +83,17 @@ export class GameRunner {
         this.awayLineup = _awayLineup;
         
         // Length of game
-        this.currInning = 1;
-        this.finalRegulationInning = gameConfig.INNINGS;
+        this.currInning = 0;
         this.outs = 0;
         this.topOfInning = true;
         
         // Basic scoreboard stats
-        this.homeRunsByInning = _.range(0, gameConfig.INNINGS, 0);
+        this.homeRunsByInning = [0];
         this.homeHits = 0;
         this.homeErrors = 0;
         this.homeLOB = 0;
     
-        this.awayRunsByInning = _.range(0, gameConfig.INNINGS, 0);
+        this.awayRunsByInning = [0];
         this.awayHits = 0;
         this.awayErrors = 0;
         this.awayLOB = 0;
@@ -85,18 +110,17 @@ export class GameRunner {
 
         this.basePath = new BasePath();
 
-        console.log("GAME START");
+        console.log('GAME START');
     }
 
     executePlay(): boolean {
 
-        if (!this.isGameOver()) {
+        if (!this.isGameOver) {
 
-            // logger.debug("CURRENT AT-BAT")
-            logger.info("--------------------------------");
-            logger.info(`${(this.topOfInning)?"TOP":"BOTTOM"} INNING ${this.currInning}`); // FUN WITH TERNARIES!!
-            logger.debug(`${this.outs} OUT${(this.outs != 1)?"S":""}`);
-            // logger.debug(`HOME TEAM: ${this.homeRuns} AWAY TEAM: ${this.awayRuns}`);
+            // logger.debug('CURRENT AT-BAT')
+            logger.info('--------------------------------');
+            logger.info(`${(this.topOfInning)?'TOP':'BOTTOM'} INNING ${this.currInning+1}`); // FUN WITH TERNARIES!!
+            logger.debug(`${this.outs} OUT${(this.outs != 1)?'S':''}`);
 
             // this.currPitcher = this.homeSP;
 
@@ -113,7 +137,7 @@ export class GameRunner {
                             ? this.currBatter.getPlayResult(x, y) // Batter
                             : this.currPitcher.getPlayResult(x, y); // Pitcher
 
-            try { // TODO: Determine outcome from result
+            try { // Determine outcome from result
                 this.incrementLineupIndex();
 
                 logger.info(`RESULT: ${result.result}`);
@@ -125,32 +149,25 @@ export class GameRunner {
                 this.basePath.printBases();
 
             } catch { // If half-inning is over
-                logger.info("HALF-INNING OVER")
+                logger.info('HALF-INNING OVER')
                 this.flipInning();
-                this.printScoreBoard();
+                const away = this.awayRuns
+                const home = this.homeRuns
+                logger.debug(`HOME TEAM: ${home} AWAY TEAM: ${away}`);
+
             }
 
-
-            // this.currBatter = this.homeLineup(this.)
             return true;
         } else {
             return false;
         }
     }
 
-    get homeRuns(): number {
-        return this.homeRunsByInning.reduce((acc, curr) => acc += curr, 0);
-    }
-
-    get awayRuns(): number {
-        return this.awayRunsByInning.reduce((acc, curr) => acc += curr, 0);
-    }
-
     printScoreBoard(): void {
-        logger.debug("\nSCOREBOARD:");
-        logger.debug([..._.range(1, this.currInning+1), "|", "R", "H", "E"].join(" "));
-        logger.debug([...this.awayRunsByInning, "|", this.awayRuns, this.awayHits, this.awayErrors].join(" "));
-        logger.debug([...this.homeRunsByInning, "|", this.homeRuns, this.homeHits, this.homeErrors].join(" "));
+        logger.debug('\nSCOREBOARD:');
+        logger.debug([..._.range(1, gameConfig.INNINGS+1), '|', 'R', 'H', 'E'].join(' '));
+        logger.debug([...this.awayRunsByInning, '|', this.awayRuns, this.awayHits, this.awayErrors].join(' '));
+        logger.debug([...this.homeRunsByInning, '|', this.homeRuns, this.homeHits, this.homeErrors].join(' '));
     }
 
     private initLineups() {
@@ -162,7 +179,7 @@ export class GameRunner {
             this.homeLineup.forEach(player => player.putIntoGame());
             this.awayLineup.forEach(player => player.putIntoGame());
 
-            logger.info("Play Ball!");
+            logger.info('Play Ball!');
             this.gameStarted = !this.gameStarted;
         }
     }
@@ -172,32 +189,15 @@ export class GameRunner {
         if (!this.topOfInning) { // If bottom of inning
             this.homeLOB += numLOB;
             this.currInning++; // Increment the inning
-            if (this.currInning >= this.finalRegulationInning) { // If we're in extras need to bump the scoreboard/array
-                this.homeRunsByInning.push()
-                this.awayRunsByInning.push()
-            }
+            if (!this.isGameOver) {
+                this.homeRunsByInning.push(0)
+                this.awayRunsByInning.push(0)
+            } 
         } else {
             this.awayLOB += numLOB;
         }
         this.topOfInning = !this.topOfInning; // Flip to other half
         this.outs = 0; // Reset outs
-    }
-
-    private isGameOver(): boolean {
-
-        return (this.homeRuns > this.awayRuns) // If the home team is winning ...
-            ? (!this.topOfInning) // ... in the bottom of ...
-                ? (this.currInning >= this.finalRegulationInning) // ... the last inning or later ...
-                    ? true // ... the game is over.
-                    : false
-                : false
-            : (this.awayRuns > this.homeRuns) // If the away team is winning ...
-                ? (this.topOfInning) // ... in the top of ...
-                    ? (this.currInning > this.finalRegulationInning) // ... the first extra inning or later ...
-                        ? true // ... the game is over.
-                        : false
-                    : false
-                : false;
     }
 
     private incrementOuts() {
@@ -218,9 +218,14 @@ export class GameRunner {
     }
 
     private addRunsForHalfInning(runs: number) {
-        this.topOfInning
-            ? this.awayRunsByInning[this.currInning] += runs
-            : this.homeRunsByInning[this.currInning] += runs
+        if (runs > 0){
+            logger.silly(`${runs} runs scored!`)
+        }
+        if (this.topOfInning) {
+            this.awayRunsByInning[this.currInning] += runs;
+        } else {
+            this.homeRunsByInning[this.currInning] += runs;
+        }
     }
 
     private processResult(result: IBattedResult): number {
@@ -249,7 +254,7 @@ export class GameRunner {
                 runsScoredOnPlay += this.basePath.advanceAllRunners();
                 break;
             case PLAY_RESULTS.WALK:
-                runsScoredOnPlay += this.basePath.advanceAllRunners(this.currBatter);
+                runsScoredOnPlay += this.basePath.walkBatter(this.currBatter);
                 break;
             // Outs
             case PLAY_RESULTS.GROUNDBALL:
@@ -265,6 +270,9 @@ export class GameRunner {
                 this.incrementOuts();
                 break;
             case PLAY_RESULTS.STRIKEOUT:
+                this.incrementOuts();
+                break;
+            case PLAY_RESULTS.CATCHERS:
                 this.incrementOuts();
                 break;
         }

@@ -1,1 +1,1 @@
-export { randomNumber } from "./RandomNumber"
+export { randomNumber } from './NumberHelper'

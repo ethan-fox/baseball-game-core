@@ -8,8 +8,8 @@ app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 app.use(bodyParser.text()); // for parsing plain text (in this app: markdown)
 app.use(function (req, res, next) { // this is the only way to fix the CORS issue :(
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
     next();
 });
 
@@ -58,7 +58,7 @@ app.post('/postArticle', async function (req, res) {
         
     //     let statusCode, resBody;
     //     if(err){
-    //         logger.error("ERROR:",err)
+    //         logger.error('ERROR:',err)
     //         statusCode = 500
     //         resBody = {
     //             'message': 'Could not post article.',
@@ -87,7 +87,7 @@ app.delete('/deleteArticle', async function (req, res) {
     //     let statusCode, resMessage
         
     //     if(err){ 
-    //         logger.error("ERROR:", err)
+    //         logger.error('ERROR:', err)
     //         statusCode = 500;
     //         resMessage = 'Could not remove article'
     //     }else if (result.deletedCount === 0){

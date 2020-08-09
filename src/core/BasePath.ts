@@ -1,6 +1,5 @@
-import { Hitter } from "./Player";
-import { BASE } from "../config/constants";
-import { first } from "lodash";
+import { Hitter } from './Player';
+import { BASE } from '../config/constants';
 
 export class BasePath {
 
@@ -16,6 +15,26 @@ export class BasePath {
 
     get runners(): Hitter[] {
         return [this.firstBase, this.secondBase, this.thirdBase]
+    }
+
+    // Needs to be it's own logic because it isn't a force
+    walkBatter(newRunner: Hitter): number  {
+        let runsScored = 0;
+
+        if (!this.firstBase) {
+            this.firstBase = newRunner;
+        } else if (!this.secondBase) {
+            this.secondBase = this.firstBase;
+            this.firstBase = newRunner;
+        } else if (!this.thirdBase) {
+            this.thirdBase = this.secondBase;
+            this.secondBase = this.firstBase;
+            this.firstBase = newRunner;
+        } else {
+            runsScored = this.advanceAllRunners(newRunner);
+        }
+
+        return runsScored;
     }
 
     // Will return number of runners that advanced from third (i.e Runs Scored)
