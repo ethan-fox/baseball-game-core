@@ -20,7 +20,7 @@ function playGame() {
     const batter = new Hitter(
         sampleBatter.nameFirst,
         sampleBatter.nameLast,
-        samplePitcher.fielding,
+        sampleBatter.fielding,
         sampleBatter.stealing,
         sampleBatter.running,
         sampleBatter.batting

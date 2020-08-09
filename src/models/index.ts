@@ -1,1 +1,1 @@
-export { IBattedResult } from './BattedResult'
+export { IBattedResult, IPlayResult } from './Result'

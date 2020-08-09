@@ -1,7 +1,7 @@
 import { Hitter, Pitcher, BasePath } from '../core';
 import { randomNumber } from '../helpers'
 import { gameConfig, CHART_PARAMS, PLAY_RESULTS, POSITIONS } from '../config'
-import { IBattedResult } from '../models';
+import { IBattedResult, IPlayResult } from '../models';
 import { logger } from '../config';
 import * as _ from 'lodash';
 
@@ -30,9 +30,6 @@ export class Game {
 
     private basePath: BasePath;
 
-    // private currPitcher: Pitcher;
-    // private currLineup: Hitter[];
-    // private currBatter: Hitter;
     private currHomeLineupPos = 0;
     private currAwayLineupPos = 0;
 
@@ -142,9 +139,10 @@ export class Game {
 
                 logger.info(`RESULT: ${result.result}`);
 
-                const runsScored = this.processResult(result);
+                const playResult = this.processResult(result);
 
-                this.addRunsForHalfInning(runsScored);
+                this.addRunsForHalfInning(playResult.runsScored);
+                if (playResult.hit) this.addHitForHalfInning()
 
                 this.basePath.printBases();
 
@@ -228,38 +226,51 @@ export class Game {
         }
     }
 
-    private processResult(result: IBattedResult): number {
-        let runsScoredOnPlay = 0;
+    private addHitForHalfInning() {
+        if (this.topOfInning) {
+            this.awayHits++;
+        } else {
+            this.homeHits++;
+        }
+    }
+
+    private processResult(result: IBattedResult): IPlayResult {
+        let runsScored = 0;
+        let hit = false;
 
         // TODO: Additional effects (*, **, +, etc...)
 
         switch (result.result) {
             // Reach base safely
             case PLAY_RESULTS.SINGLE:
-                runsScoredOnPlay += this.basePath.advanceAllRunners(this.currBatter);
+                runsScored += this.basePath.advanceAllRunners(this.currBatter);
+                hit = true;
                 break;
             case PLAY_RESULTS.DOUBLE:
-                runsScoredOnPlay += this.basePath.advanceAllRunners(this.currBatter);
-                runsScoredOnPlay += this.basePath.advanceAllRunners();
+                runsScored += this.basePath.advanceAllRunners(this.currBatter);
+                runsScored += this.basePath.advanceAllRunners();
+                hit = true;
                 break;
             case PLAY_RESULTS.TRIPLE:
-                runsScoredOnPlay += this.basePath.advanceAllRunners(this.currBatter);
-                runsScoredOnPlay += this.basePath.advanceAllRunners();
-                runsScoredOnPlay += this.basePath.advanceAllRunners();
+                runsScored += this.basePath.advanceAllRunners(this.currBatter);
+                runsScored += this.basePath.advanceAllRunners();
+                runsScored += this.basePath.advanceAllRunners();
+                hit = true;
                 break;
             case PLAY_RESULTS.HOMERUN:
-                runsScoredOnPlay += this.basePath.advanceAllRunners(this.currBatter);
-                runsScoredOnPlay += this.basePath.advanceAllRunners();
-                runsScoredOnPlay += this.basePath.advanceAllRunners();
-                runsScoredOnPlay += this.basePath.advanceAllRunners();
+                runsScored += this.basePath.advanceAllRunners(this.currBatter);
+                runsScored += this.basePath.advanceAllRunners();
+                runsScored += this.basePath.advanceAllRunners();
+                runsScored += this.basePath.advanceAllRunners();
+                hit = true;
                 break;
             case PLAY_RESULTS.WALK:
-                runsScoredOnPlay += this.basePath.walkBatter(this.currBatter);
+                runsScored += this.basePath.walkBatter(this.currBatter);
                 break;
             // Outs
             case PLAY_RESULTS.GROUNDBALL:
                 this.incrementOuts();
-                runsScoredOnPlay += this.basePath.advanceAllRunners();
+                runsScored += this.basePath.advanceAllRunners();
                 // TODO: Chartparams
                 break;
             case PLAY_RESULTS.FLYBALL:
@@ -277,7 +288,7 @@ export class Game {
                 break;
         }
 
-        return runsScoredOnPlay;
+        return { runsScored, hit };
     }
 
 }

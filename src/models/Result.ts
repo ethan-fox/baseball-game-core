@@ -4,3 +4,8 @@ export interface IBattedResult {
     chartParam?: string;
     effect?: string;
 }
+
+export interface IPlayResult {
+    runsScored: number;
+    hit: boolean;
+}
