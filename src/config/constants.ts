@@ -424,6 +424,7 @@ export const enum PLAY_RESULTS {
     HOMERUN = 'HR'
 }
 
+// I need a way to resolve all hits to a list to check play type .. i don't like this.
 export const HIT_TYPES : string[] = [
     PLAY_RESULTS.SINGLE,
     PLAY_RESULTS.DOUBLE,
