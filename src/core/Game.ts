@@ -142,12 +142,15 @@ export class Game {
 
             playData = this.processResult(result);
 
+            logger.debug(`${this.outs} OUT${(this.outs != 1)?'S':''}`);
+
             if (this.outs == 3) {
-                logger.info('HALF-INNING OVER')
+                logger.silly('HALF-INNING OVER')
                 this.flipInning();
                 const away = this.awayRuns
                 const home = this.homeRuns
-                logger.debug(`HOME TEAM: ${home} AWAY TEAM: ${away}`);
+                
+                this.printScoreBoard()
 
             } else { // If half-inning is over
                 this.addRunsForHalfInning(playData.runsScored);
@@ -161,10 +164,11 @@ export class Game {
     }
 
     printScoreBoard(): void {
-        logger.debug('\nSCOREBOARD:');
-        logger.debug([..._.range(1, gameConfig.INNINGS+1), '|', 'R', 'H', 'E'].join(' '));
-        logger.debug([...this.awayRunsByInning, '|', this.awayRuns, this.awayHits, this.awayErrors].join(' '));
-        logger.debug([...this.homeRunsByInning, '|', this.homeRuns, this.homeHits, this.homeErrors].join(' '));
+        // TODO looks wonky
+        logger.silly('SCOREBOARD:');
+        logger.silly([..._.range(1, gameConfig.INNINGS+1), '|', 'R', 'H', 'E'].join(' '));
+        logger.silly([...this.awayRunsByInning, '|', this.awayRuns, this.awayHits, this.awayErrors].join(' '));
+        logger.silly([...this.homeRunsByInning, '|', this.homeRuns, this.homeHits, this.homeErrors].join(' '));
     }
 
     private initLineups() {

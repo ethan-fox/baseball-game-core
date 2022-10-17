@@ -8,7 +8,9 @@ Should be hosted in it's own app to receive remote traffic:
 $ npm run dev
 ```
 
-and then `POST localhost:7050/executePlay` (via Postman or somewhere else)
+and then `POST localhost:7050/startGame` (via Postman or somewhere else)
+
+`POST localhost:7050/executePlay` to make it move
 
 ## TODO list
 
