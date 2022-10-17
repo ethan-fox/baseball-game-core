@@ -2,7 +2,7 @@
 
 Play a baseball game, if every pitcher was Gerrit Cole and every hitter was DJ LeMahieu (my ideal team TBH)
 
-The code for underlying baseball-game infrastructure.  Should be hosted in it's own app to receive remote traffic.
+Should be hosted in it's own app to receive remote traffic:
 
 ```sh
 $ npm run dev
